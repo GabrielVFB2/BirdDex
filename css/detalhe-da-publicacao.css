@@ -1,0 +1,120 @@
+body {
+	line-height: normal;
+}
+
+.barra-de-status1 {
+	font-weight: unset;
+}
+
+.tela-do-aplicativo-conteudo {
+	margin: 0 -1px;
+	gap: 16px;
+	padding-bottom: 83px;
+}
+
+.publicacao1 {
+	font-weight: 400;
+}
+
+.publicacao1 .card-imagem-de-ave-reservada1 {
+	padding-top: 67px;
+	padding-bottom: 67px;
+}
+
+.tela-do-aplicativo-comentarios {
+	width: 100%;
+	max-width: 540px;
+	display: flex;
+	flex-direction: column;
+	gap: 13px;
+	text-align: left;
+}
+
+
+
+/* comentario */
+
+.comentario {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+}
+
+.comentario-conteudo {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex-grow: 1;
+	text-align: left;
+}
+
+.comentario-autoria-do {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+}
+
+.comentario-text-pessoa {
+	color: #000;
+	font-size: 12px;
+	font-weight: 600;
+	text-align: left;
+}
+
+.comentario-text-horario {
+	color: #686868;
+	font-size: 10px;
+	font-weight: 400;
+	text-align: left;
+}
+
+.comentario-text-mensagem {
+	color: #000;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1.4;
+}
+/* end comentario*/
+
+
+.tela-do-aplicativo-text-dos {
+	color: #000;
+	font-size: 15px;
+	font-weight: 700;
+}
+
+.comentario1 .comentario-btn-avatar {
+	font-weight: 400;
+}
+
+.comentario2 .comentario-btn-avatar {
+	font-weight: 400;
+}
+
+.comentario3 .comentario-btn-avatar {
+	font-weight: 400;
+}
+
+.tela-do-aplicativo-escrever {
+	width: 100%;
+	max-width: 540px;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	font-size: 12px;
+	padding: 12px 9px;
+	border: 1px solid #c8c8c8;
+	border-radius: 4px;
+}
+
+.tela-do-aplicativo-text-campo {
+	color: #686868;
+	font-weight: 400;
+	text-align: left;
+}
+
+.tela-do-aplicativo-text-enviar {
+	color: #000;
+	font-weight: 600;
+	text-align: left;
+}

@@ -1,0 +1,78 @@
+body {
+	line-height: normal;
+}
+
+.barra-de-status1 {
+	font-weight: unset;
+}
+
+.tela-do-aplicativo-conteudo {
+	margin: 0 -1px;
+	gap: 16px;
+	padding-bottom: 57px;
+}
+
+.tela-do-aplicativo-progresso {
+	width: 100%;
+	max-width: 540px;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	color: #686868;
+	font-size: 12px;
+	font-weight: 400;
+}
+
+.tela-do-aplicativo-orientacao {
+	width: 100%;
+	max-width: 540px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.tela-do-aplicativo-subtitle {
+	color: #000;
+	font-size: 17px;
+	font-weight: 600;
+}
+
+.tela-do-aplicativo-text-descricao {
+	color: #686868;
+}
+
+.card-previa-da-publicacao {
+	max-width: 540px;
+	gap: 14px;
+}
+
+.card-previa-da-publicacao-text {
+	color: #686868;
+	text-align: left;
+}
+
+.publicacao1 {
+	width: unset;
+	max-width: unset;
+	font-weight: 400;
+}
+
+.publicacao1 .card-imagem-de-ave-reservada1 {
+	padding-top: 67px;
+	padding-bottom: 67px;
+}
+
+.tela-do-aplicativo-text-publico {
+	margin-left: 0; margin-right: 0;
+	align-self: stretch;
+	color: #686868;
+}
+
+.acoes-da-etapa1 .acoes-da-etapa-btn-acao1 {
+	color: #fff;
+}
+
+.acoes-da-etapa1 .acoes-da-etapa-btn-acao2 {
+	color: #242424;
+	background-color: #fff;
+}
