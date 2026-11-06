@@ -1,0 +1,16 @@
+.conversations-content {
+  padding: 24px 16px;
+}
+
+.conversations-empty-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.conversations-empty-text {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
