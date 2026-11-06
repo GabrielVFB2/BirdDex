@@ -11,7 +11,7 @@ import './ReviewPostPage.css'
 export default function ReviewPostPage() {
   const navigate = useNavigate()
   const { draft, resetDraft } = usePostDraft()
-  const { profile } = useAuth()
+  const { profile, user } = useAuth()
   const [publishing, setPublishing] = useState(false)
   const [error, setError] = useState('')
 
@@ -27,7 +27,7 @@ export default function ReviewPostPage() {
     let imageUrl = ''
 
     if (draft.imageDataUrl) {
-      const fileName = `post-${Date.now()}.jpg`
+      const fileName = `${user!.id}/${crypto.randomUUID()}.jpg`
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('posts')
         .upload(fileName, dataUrlToBlob(draft.imageDataUrl), {
