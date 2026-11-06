@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Bell, Bird } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import Avatar from './Avatar'
 import './TopBar.css'
 
 interface TopBarProps {
@@ -14,45 +15,34 @@ export default function TopBar({ title, showLogo = false, showBack = false, show
   const navigate = useNavigate()
   const { profile } = useAuth()
 
-  if (showLogo) {
-    return (
-      <header className="topbar topbar-logo">
-        <div className="topbar-brand">
-          <div className="topbar-logo-icon">
-            <Bird size={24} />
-          </div>
-          <h1 className="topbar-brand-name app-title">Pio</h1>
-        </div>
-        <div className="topbar-actions">
-          {showBell && (
-            <button className="btn-icon topbar-bell" aria-label="Notificações">
-              <Bell size={20} />
-              <span className="topbar-bell-dot" />
-            </button>
-          )}
-          {profile && (
-            <Link to={`/profile/${profile.id}`}>
-              <div className="topbar-user-avatar" />
-            </Link>
-          )}
-        </div>
-      </header>
-    )
-  }
-
   return (
-    <header className="topbar">
-      {showBack && (
-        <button className="btn-icon topbar-back" onClick={() => navigate(-1)} aria-label="Voltar">
-          <span className="topbar-back-arrow">‹</span>
-        </button>
+    <header className={`topbar ${showLogo ? 'topbar-logo' : ''}`}>
+      {showLogo ? (
+        <Link to="/" className="topbar-brand">
+          <Bird size={25} strokeWidth={1.6} />
+          <h1 className="topbar-brand-name app-title">BirdDex</h1>
+        </Link>
+      ) : (
+        <>
+          {showBack && (
+            <button className="btn-icon topbar-back" onClick={() => navigate(-1)} aria-label="Voltar">‹</button>
+          )}
+          <h2 className="topbar-title">{title}</h2>
+        </>
       )}
-      <h2 className="topbar-title">{title}</h2>
-      {showBell && (
-        <button className="btn-icon topbar-bell" aria-label="Notificações">
-          <Bell size={20} />
-        </button>
-      )}
+      <div className="topbar-actions">
+        {showBell && (
+          <button className="btn-icon topbar-bell" aria-label="Notificações">
+            <Bell size={18} strokeWidth={1.7} />
+            <span className="topbar-bell-dot" />
+          </button>
+        )}
+        {showLogo && profile && (
+          <Link to={`/profile/${profile.id}`} aria-label="Abrir perfil">
+            <Avatar profile={profile} size={32} />
+          </Link>
+        )}
+      </div>
     </header>
   )
 }

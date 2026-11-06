@@ -32,7 +32,7 @@ export default function SignInPage() {
         <div className="auth-logo">
           <Bird size={40} />
         </div>
-        <h1 className="auth-title app-title">Pio</h1>
+        <h1 className="auth-title app-title">BirdDex</h1>
         <p className="auth-tagline">Sua comunidade de observadores de aves</p>
       </div>
 

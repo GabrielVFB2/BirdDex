@@ -97,6 +97,10 @@ export default function FeedPage() {
   return (
     <>
       <TopBar showLogo showBell />
+      <section className="feed-welcome">
+        <p className="feed-welcome-kicker">SEU OLHAR, NOVAS DESCOBERTAS</p>
+        <h2 className="feed-welcome-title app-title">A natureza acontece lá fora.</h2>
+      </section>
       <div className="feed-tabs">
         <button
           className={`feed-tab ${tab === 'foryou' ? 'feed-tab-active' : ''}`}

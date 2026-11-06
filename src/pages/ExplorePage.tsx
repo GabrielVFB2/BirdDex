@@ -75,7 +75,7 @@ export default function ExplorePage() {
       <div className="explore-content">
         <div className="explore-intro">
           <Compass size={20} className="explore-intro-icon" />
-          <p>Descubra observadores e aves da comunidade Pio.</p>
+          <p>Descubra observadores e aves da comunidade BirdDex.</p>
         </div>
 
         {loading ? (
