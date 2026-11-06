@@ -40,7 +40,7 @@ input, textarea { font: inherit; }
 img { max-width: 100%; height: auto; display: block; }
 
 .app-container { max-width: 580px; min-height: 100vh; margin: 0 auto; background: var(--color-surface); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; position: relative; }
-.app-content { flex: 1; padding-bottom: 72px; }
+.app-content { flex: 1; padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
 .app-title { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.35px; }
 .muted { color: var(--color-text-muted); }
 .light-text { color: var(--color-text-light); }

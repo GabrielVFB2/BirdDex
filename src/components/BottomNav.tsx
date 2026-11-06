@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import { Chrome as Home, Compass, Plus, MessageCircle, User } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import './BottomNav.css'
 
 export default function BottomNav() {
   const { profile } = useAuth()
