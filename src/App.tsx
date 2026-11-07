@@ -11,6 +11,7 @@ import ReviewPostPage from '@/pages/ReviewPostPage'
 import PostConfirmationPage from '@/pages/PostConfirmationPage'
 import ProfilePage from '@/pages/ProfilePage'
 import ConversationsPage from '@/pages/ConversationsPage'
+import NotificationsPage from '@/pages/NotificationsPage'
 import type { JSX } from 'react'
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
@@ -60,6 +61,7 @@ export default function App() {
                 <Route path="/new/confirmation" element={<PostConfirmationPage />} />
                 <Route path="/profile/:id" element={<ProfilePage />} />
                 <Route path="/conversations" element={<ConversationsPage />} />
+                <Route path="/notifications" element={<NotificationsPage />} />
               </Routes>
             </div>
             <BottomNav />

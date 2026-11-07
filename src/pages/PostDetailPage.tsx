@@ -8,6 +8,7 @@ import Avatar from '@/components/Avatar'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { PostWithDetails, Comment } from '@/types'
+import { createNotification } from '@/lib/notifications'
 import './PostDetailPage.css'
 
 export default function PostDetailPage() {
@@ -115,7 +116,10 @@ export default function PostDetailPage() {
     } else {
       setLiked(true)
       setLikeCount((c) => c + 1)
-      await supabase.from('likes').insert({ post_id: id, user_id: user.id })
+      const { error } = await supabase.from('likes').insert({ post_id: id, user_id: user.id })
+      if (!error && post && post.user_id !== user.id) {
+        createNotification({ type: 'like', actorId: user.id, userId: post.user_id, postId: id })
+      }
     }
 
     setSaving(false)
@@ -163,6 +167,10 @@ export default function PostDetailPage() {
     setComments((prev) => [...prev, data as Comment])
     setCommentText('')
     setSubmittingComment(false)
+
+    if (post && post.user_id !== user.id) {
+      createNotification({ type: 'comment', actorId: user.id, userId: post.user_id, postId: id })
+    }
   }
 
   if (loading) {

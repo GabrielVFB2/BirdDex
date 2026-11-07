@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Bell, Bird } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import { useNotifications } from '@/hooks/useNotifications'
 import Avatar from './Avatar'
 import './TopBar.css'
 
@@ -14,6 +15,7 @@ interface TopBarProps {
 export default function TopBar({ title, showLogo = false, showBack = false, showBell = true }: TopBarProps) {
   const navigate = useNavigate()
   const { profile } = useAuth()
+  const { unreadCount } = useNotifications()
 
   return (
     <header className={`topbar ${showLogo ? 'topbar-logo' : ''}`}>
@@ -32,10 +34,10 @@ export default function TopBar({ title, showLogo = false, showBack = false, show
       )}
       <div className="topbar-actions">
         {showBell && (
-          <button className="btn-icon topbar-bell" aria-label="Notificações">
+          <Link to="/notifications" className="btn-icon topbar-bell" aria-label="Notificações">
             <Bell size={18} strokeWidth={1.7} />
-            <span className="topbar-bell-dot" />
-          </button>
+            {unreadCount > 0 && <span className="topbar-bell-count">{unreadCount > 9 ? '9+' : unreadCount}</span>}
+          </Link>
         )}
         {showLogo && profile && (
           <Link to={`/profile/${profile.id}`} aria-label="Abrir perfil">

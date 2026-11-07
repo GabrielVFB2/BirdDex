@@ -7,6 +7,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { PostWithDetails } from '@/types'
 import Avatar from './Avatar'
+import { createNotification } from '@/lib/notifications'
 import './PostCard.css'
 
 interface PostCardProps {
@@ -50,7 +51,10 @@ export default function PostCard({ post, onLikeChange }: PostCardProps) {
     } else {
       setLiked(true)
       setLikeCount((c) => c + 1)
-      await supabase.from('likes').insert({ post_id: post.id, user_id: user.id })
+      const { error } = await supabase.from('likes').insert({ post_id: post.id, user_id: user.id })
+      if (!error && post.user_id !== user.id) {
+        createNotification({ type: 'like', actorId: user.id, userId: post.user_id, postId: post.id })
+      }
     }
 
     onLikeChange?.(post.id, !liked, liked ? likeCount - 1 : likeCount + 1)

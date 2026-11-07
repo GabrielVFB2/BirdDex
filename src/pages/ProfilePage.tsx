@@ -9,6 +9,8 @@ import PostCard from '@/components/PostCard'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { Profile, PostWithDetails } from '@/types'
+import { createNotification } from '@/lib/notifications'
+import EditProfileModal from '@/components/EditProfileModal'
 import './ProfilePage.css'
 
 export default function ProfilePage() {
@@ -22,6 +24,7 @@ export default function ProfilePage() {
   const [followPending, setFollowPending] = useState(false)
   const [followerCount, setFollowerCount] = useState(0)
   const [followingCount, setFollowingCount] = useState(0)
+  const [editOpen, setEditOpen] = useState(false)
 
   const isOwnProfile = user?.id === id
 
@@ -124,9 +127,12 @@ export default function ProfilePage() {
       setIsFollowing(false)
       setFollowerCount((c) => Math.max(0, c - 1))
     } else {
-      await supabase.from('follows').insert({ follower_id: user.id, following_id: id })
-      setIsFollowing(true)
-      setFollowerCount((c) => c + 1)
+      const { error } = await supabase.from('follows').insert({ follower_id: user.id, following_id: id })
+      if (!error) {
+        setIsFollowing(true)
+        setFollowerCount((c) => c + 1)
+        createNotification({ type: 'follow', actorId: user.id, userId: id! })
+      }
     }
 
     setFollowPending(false)
@@ -201,7 +207,7 @@ export default function ProfilePage() {
         </div>
 
         {isOwnProfile ? (
-          <button className="btn-secondary profile-edit-btn">
+          <button className="btn-secondary profile-edit-btn" onClick={() => setEditOpen(true)}>
             <Settings size={16} />
             Editar perfil
           </button>
@@ -274,6 +280,7 @@ export default function ProfilePage() {
           </div>
         )}
       </div>
+      {isOwnProfile && <EditProfileModal open={editOpen} onClose={() => setEditOpen(false)} profile={profile} />}
     </>
   )
 }

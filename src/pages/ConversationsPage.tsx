@@ -8,6 +8,7 @@ import Avatar from '@/components/Avatar'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { Profile } from '@/types'
+import { createNotification } from '@/lib/notifications'
 import './ConversationsPage.css'
 
 interface Message {
@@ -127,6 +128,7 @@ export default function ConversationsPage() {
       setMessages((current) => [...current, data as Message])
       setMessageText('')
       setError('')
+      createNotification({ type: 'message', actorId: user.id, userId: selectedProfileId })
     }
     setSending(false)
   }
