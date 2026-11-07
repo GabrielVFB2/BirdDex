@@ -75,6 +75,7 @@
 }
 
 .profile-edit-btn,
+.profile-logout-btn,
 .profile-follow-btn,
 .profile-message-btn {
   width: 100%;
@@ -82,6 +83,15 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-1);
+}
+
+.profile-logout-btn {
+  color: var(--color-error);
+  border-color: var(--color-error-300);
+}
+
+.profile-logout-btn:hover {
+  background: var(--color-error-100);
 }
 
 .profile-divider {

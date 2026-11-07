@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Bird, Heart, MessageCircle, MapPin, Settings, Send } from 'lucide-react'
+import { Bird, Heart, MessageCircle, MapPin, Settings, Send, LogOut } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 import TopBar from '@/components/TopBar'
@@ -15,7 +15,7 @@ import './ProfilePage.css'
 
 export default function ProfilePage() {
   const { id } = useParams<{ id: string }>()
-  const { user, profile: myProfile } = useAuth()
+  const { user, profile: myProfile, signOut } = useAuth()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [posts, setPosts] = useState<PostWithDetails[]>([])
   const [loading, setLoading] = useState(true)
@@ -207,10 +207,16 @@ export default function ProfilePage() {
         </div>
 
         {isOwnProfile ? (
-          <button className="btn-secondary profile-edit-btn" onClick={() => setEditOpen(true)}>
-            <Settings size={16} />
-            Editar perfil
-          </button>
+          <div className="profile-actions">
+            <button className="btn-secondary profile-edit-btn" onClick={() => setEditOpen(true)}>
+              <Settings size={16} />
+              Editar perfil
+            </button>
+            <button className="btn-secondary profile-logout-btn" onClick={() => signOut()}>
+              <LogOut size={16} />
+              Sair da conta
+            </button>
+          </div>
         ) : (
           <div className="profile-actions">
             <button

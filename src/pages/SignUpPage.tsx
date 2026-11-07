@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Bird } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import { GoogleIcon } from '@/components/GoogleIcon'
 import './AuthPage.css'
 
 export default function SignUpPage() {
-  const { signUp } = useAuth()
+  const { signUp, signInWithGoogle } = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -36,6 +37,16 @@ export default function SignUpPage() {
       setLoading(false)
     } else {
       navigate('/')
+    }
+  }
+
+  const handleGoogle = async () => {
+    setError('')
+    setLoading(true)
+    const { error } = await signInWithGoogle()
+    if (error) {
+      setError(error)
+      setLoading(false)
     }
   }
 
@@ -102,6 +113,15 @@ export default function SignUpPage() {
 
         <button type="submit" className="btn-primary" disabled={loading}>
           {loading ? 'Criando conta...' : 'Criar conta'}
+        </button>
+
+        <div className="auth-divider">
+          <span>ou</span>
+        </div>
+
+        <button type="button" className="btn-google" onClick={handleGoogle} disabled={loading}>
+          <GoogleIcon />
+          Cadastrar com Google
         </button>
 
         <p className="auth-switch">

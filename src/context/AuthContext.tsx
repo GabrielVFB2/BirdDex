@@ -10,6 +10,7 @@ interface AuthContextValue {
   loading: boolean
   signUp: (email: string, password: string, username: string, displayName: string) => Promise<{ error: string | null }>
   signIn: (email: string, password: string) => Promise<{ error: string | null }>
+  signInWithGoogle: () => Promise<{ error: string | null }>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
 }
@@ -32,6 +33,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('Error loading profile:', error.message)
       return
     }
+
+    if (!data) {
+      const { data: userData } = await supabase.auth.getUser()
+      const u = userData.user
+      const email = u?.email ?? ''
+      const fullName = (u?.user_metadata?.full_name as string) || (u?.user_metadata?.name as string) || ''
+      const avatarUrl = (u?.user_metadata?.avatar_url as string) || (u?.user_metadata?.picture as string) || ''
+      const baseName = fullName || email.split('@')[0] || 'Observador'
+      const username = `${baseName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}_${Math.random().toString(36).slice(2, 7)}`
+
+      await supabase.from('profiles').insert({
+        id: userId,
+        username,
+        display_name: baseName,
+        avatar_url: avatarUrl,
+      })
+
+      const { data: newProfile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle()
+      setProfile(newProfile as Profile | null)
+      return
+    }
+
     setProfile(data as Profile | null)
   }
 
@@ -91,13 +118,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: null }
   }
 
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    })
+    if (error) return { error: error.message }
+    return { error: null }
+  }
+
   const signOut = async () => {
     await supabase.auth.signOut()
     setProfile(null)
   }
 
   return (
-    <AuthContext.Provider value={{ session, user: session?.user ?? null, profile, loading, signUp, signIn, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{ session, user: session?.user ?? null, profile, loading, signUp, signIn, signInWithGoogle, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   )
