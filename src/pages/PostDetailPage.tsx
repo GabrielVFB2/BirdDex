@@ -21,6 +21,8 @@ export default function PostDetailPage() {
   const [likeCount, setLikeCount] = useState(0)
   const [saving, setSaving] = useState(false)
   const [likeAnimating, setLikeAnimating] = useState(false)
+  const [bookmarked, setBookmarked] = useState(false)
+  const [bookmarkPending, setBookmarkPending] = useState(false)
   const [commentText, setCommentText] = useState('')
   const [submittingComment, setSubmittingComment] = useState(false)
 
@@ -56,6 +58,13 @@ export default function PostDetailPage() {
       .eq('user_id', user!.id)
       .maybeSingle()
 
+    const { data: myBookmark } = await supabase
+      .from('bookmarks')
+      .select('id')
+      .eq('post_id', id)
+      .eq('user_id', user!.id)
+      .maybeSingle()
+
     const enriched: PostWithDetails = {
       ...(data as unknown as PostWithDetails),
       like_count: likesArr?.[0]?.count ?? 0,
@@ -66,6 +75,7 @@ export default function PostDetailPage() {
     setPost(enriched)
     setLiked(enriched.liked_by_me ?? false)
     setLikeCount(enriched.like_count ?? 0)
+    setBookmarked(!!myBookmark)
     setLoading(false)
   }, [id, user])
 
@@ -109,6 +119,21 @@ export default function PostDetailPage() {
     }
 
     setSaving(false)
+  }
+
+  const handleBookmark = async () => {
+    if (!user || !id || bookmarkPending) return
+
+    setBookmarkPending(true)
+    const nextBookmarked = !bookmarked
+    setBookmarked(nextBookmarked)
+
+    const result = nextBookmarked
+      ? await supabase.from('bookmarks').insert({ post_id: id, user_id: user.id })
+      : await supabase.from('bookmarks').delete().eq('post_id', id).eq('user_id', user.id)
+
+    if (result.error) setBookmarked(!nextBookmarked)
+    setBookmarkPending(false)
   }
 
   const handleComment = async (e: React.FormEvent) => {
@@ -229,8 +254,14 @@ export default function PostDetailPage() {
               <MessageCircle size={22} />
               <span>{comments.length}</span>
             </div>
-            <button className="post-action post-action-right" aria-label="Salvar">
-              <Bookmark size={22} />
+            <button
+              className={`post-action post-action-right ${bookmarked ? 'post-action-liked' : ''}`}
+              onClick={handleBookmark}
+              disabled={bookmarkPending}
+              aria-label={bookmarked ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+              title={bookmarked ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+            >
+              <Bookmark size={22} fill={bookmarked ? 'currentColor' : 'none'} />
             </button>
           </div>
 

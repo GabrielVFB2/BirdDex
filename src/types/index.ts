@@ -47,4 +47,5 @@ export interface PostWithDetails extends Post {
   like_count?: number
   comment_count?: number
   liked_by_me?: boolean
+  bookmarked_by_me?: boolean
 }

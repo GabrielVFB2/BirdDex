@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Bird, Heart, MessageCircle, MapPin, Settings } from 'lucide-react'
+import { Bird, Heart, MessageCircle, MapPin, Settings, Send } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 import TopBar from '@/components/TopBar'
@@ -206,13 +206,19 @@ export default function ProfilePage() {
             Editar perfil
           </button>
         ) : (
-          <button
-            className={`profile-follow-btn ${isFollowing ? 'btn-secondary' : 'btn-primary'}`}
-            onClick={handleFollow}
-            disabled={followPending}
-          >
-            {isFollowing ? 'Deixar de seguir' : 'Seguir'}
-          </button>
+          <div className="profile-actions">
+            <button
+              className={`profile-follow-btn ${isFollowing ? 'btn-secondary' : 'btn-primary'}`}
+              onClick={handleFollow}
+              disabled={followPending}
+            >
+              {isFollowing ? 'Deixar de seguir' : 'Seguir'}
+            </button>
+            <Link to={`/conversations?with=${profile.id}`} className="btn-secondary profile-message-btn">
+              <Send size={16} />
+              Enviar mensagem
+            </Link>
+          </div>
         )}
 
         <div className="profile-divider" />

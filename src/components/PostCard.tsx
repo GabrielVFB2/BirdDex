@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Heart, MessageCircle, Bookmark, MoveHorizontal as MoreHorizontal, Bird } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 import { formatDistanceToNow } from 'date-fns'
@@ -20,6 +20,20 @@ export default function PostCard({ post, onLikeChange }: PostCardProps) {
   const [likeCount, setLikeCount] = useState(post.like_count ?? 0)
   const [saving, setSaving] = useState(false)
   const [likeAnimating, setLikeAnimating] = useState(false)
+  const [bookmarked, setBookmarked] = useState(post.bookmarked_by_me ?? false)
+  const [bookmarkPending, setBookmarkPending] = useState(false)
+
+  useEffect(() => {
+    if (!user) return
+
+    supabase
+      .from('bookmarks')
+      .select('id')
+      .eq('post_id', post.id)
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data }) => setBookmarked(!!data))
+  }, [post.id, user])
 
   const handleLike = async () => {
     if (!user) return
@@ -41,6 +55,21 @@ export default function PostCard({ post, onLikeChange }: PostCardProps) {
 
     onLikeChange?.(post.id, !liked, liked ? likeCount - 1 : likeCount + 1)
     setSaving(false)
+  }
+
+  const handleBookmark = async () => {
+    if (!user || bookmarkPending) return
+
+    setBookmarkPending(true)
+    const nextBookmarked = !bookmarked
+    setBookmarked(nextBookmarked)
+
+    const result = nextBookmarked
+      ? await supabase.from('bookmarks').insert({ post_id: post.id, user_id: user.id })
+      : await supabase.from('bookmarks').delete().eq('post_id', post.id).eq('user_id', user.id)
+
+    if (result.error) setBookmarked(!nextBookmarked)
+    setBookmarkPending(false)
   }
 
   const profile = post.profiles
@@ -104,8 +133,14 @@ export default function PostCard({ post, onLikeChange }: PostCardProps) {
           <MessageCircle size={22} />
           <span>{post.comment_count ?? 0}</span>
         </Link>
-        <button className="post-action post-action-right" aria-label="Salvar">
-          <Bookmark size={22} />
+        <button
+          className={`post-action post-action-right ${bookmarked ? 'post-action-liked' : ''}`}
+          onClick={handleBookmark}
+          disabled={bookmarkPending}
+          aria-label={bookmarked ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+          title={bookmarked ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+        >
+          <Bookmark size={22} fill={bookmarked ? 'currentColor' : 'none'} />
         </button>
       </div>
 
