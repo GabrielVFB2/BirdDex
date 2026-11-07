@@ -1,9 +1,9 @@
-.auth-page { min-height: 100vh; max-width: 580px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; padding: 24px; background: var(--color-surface); }
-.auth-hero { text-align: center; margin-bottom: 28px; color: var(--color-primary-dark); animation: fadeInUp .5s ease; }
-.auth-logo { width: 68px; height: 68px; border-radius: 50%; background: #e2eff8; color: var(--color-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
-.auth-title { font-size: 35px; font-weight: 500; margin-bottom: 4px; }
-.auth-tagline { font-size: 13px; color: var(--color-text-muted); }
-.auth-form { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 22px; display: flex; flex-direction: column; gap: 15px; box-shadow: var(--shadow-md); animation: fadeInUp .5s ease .1s backwards; }
-.auth-switch { text-align: center; font-size: 12px; color: var(--color-text-muted); }
-.auth-switch a { color: var(--color-primary); font-weight: 700; }
+.auth-page { min-height: 100vh; max-width: 580px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; padding: var(--space-4); background: var(--color-background); }
+.auth-hero { text-align: center; margin-bottom: var(--space-5); color: var(--color-primary-text); animation: fadeInUp var(--duration-base) var(--easing); }
+.auth-logo { width: var(--space-7); height: var(--space-7); border-radius: 50%; background: var(--color-primary-100); color: var(--color-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-2); }
+.auth-title { font-size: var(--text-display); font-weight: var(--font-weight-500); margin-bottom: var(--space-1); }
+.auth-tagline { font-size: var(--text-small); color: var(--color-text-muted); }
+.auth-form { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--card-padding); display: flex; flex-direction: column; gap: var(--space-3); box-shadow: var(--shadow-md); animation: fadeInUp var(--duration-base) var(--easing) var(--duration-fast) backwards; }
+.auth-switch { text-align: center; font-size: var(--text-small); color: var(--color-text-muted); }
+.auth-switch a { color: var(--color-primary-text); font-weight: var(--font-weight-500); }
 .auth-switch a:hover { text-decoration: underline; }

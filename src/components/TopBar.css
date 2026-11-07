@@ -1,9 +1,9 @@
-.topbar { position: sticky; top: 0; z-index: 50; min-height: 54px; display: flex; align-items: center; gap: 10px; padding: 10px 18px; background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
-.topbar-logo { padding: 12px 18px; }
-.topbar-brand { display: flex; align-items: center; gap: 6px; color: var(--color-primary-dark); }
-.topbar-brand-name { font-size: 23px; line-height: 1; }
-.topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-.topbar-bell { position: relative; width: 34px; height: 34px; color: var(--color-primary); background: #e6f0f7; }
-.topbar-bell-dot { position: absolute; top: 7px; right: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--color-accent); border: 1px solid #e6f0f7; }
-.topbar-back { width: 28px; height: 28px; color: var(--color-text); font-size: 25px; line-height: 1; }
-.topbar-title { flex: 1; font-size: 17px; font-weight: 700; color: var(--color-text); }
+.topbar { position: sticky; top: 0; z-index: 50; min-height: var(--button-height); display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.topbar-logo { padding: var(--space-2) var(--space-4); }
+.topbar-brand { display: flex; align-items: center; gap: var(--space-1); color: var(--color-primary-text); }
+.topbar-brand-name { font-size: var(--text-h2); line-height: var(--line-height-heading); }
+.topbar-actions { margin-left: auto; display: flex; align-items: center; gap: var(--space-1); }
+.topbar-bell { position: relative; width: var(--target-min); height: var(--target-min); color: var(--color-primary-text); background: var(--color-surface-2); }
+.topbar-bell-dot { position: absolute; top: var(--space-2); right: var(--space-2); width: var(--space-1); height: var(--space-1); border-radius: 50%; background: var(--color-error); border: 1px solid var(--color-surface-2); }
+.topbar-back { width: var(--target-min); height: var(--target-min); color: var(--color-text); font-size: var(--text-h1); line-height: var(--line-height-heading); }
+.topbar-title { flex: 1; font-size: var(--text-h3); font-weight: var(--font-weight-500); color: var(--color-text); }
