@@ -41,14 +41,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const fullName = (u?.user_metadata?.full_name as string) || (u?.user_metadata?.name as string) || ''
       const avatarUrl = (u?.user_metadata?.avatar_url as string) || (u?.user_metadata?.picture as string) || ''
       const baseName = fullName || email.split('@')[0] || 'Observador'
-      const username = `${baseName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}_${Math.random().toString(36).slice(2, 7)}`
+      const cleanBase = baseName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || 'observador'
+      let username = `${cleanBase}_${Math.random().toString(36).slice(2, 8)}`
+      let attempts = 0
 
-      await supabase.from('profiles').insert({
-        id: userId,
-        username,
-        display_name: baseName,
-        avatar_url: avatarUrl,
-      })
+      while (attempts < 3) {
+        const { error: insertError } = await supabase.from('profiles').insert({
+          id: userId,
+          username,
+          display_name: baseName,
+          avatar_url: avatarUrl,
+        })
+
+        if (!insertError) break
+        if (insertError.code !== '23505') {
+          console.error('Error creating profile:', insertError.message)
+          return
+        }
+        username = `${cleanBase}_${Math.random().toString(36).slice(2, 10)}`
+        attempts++
+      }
 
       const { data: newProfile } = await supabase
         .from('profiles')

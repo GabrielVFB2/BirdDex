@@ -1,6 +1,6 @@
 import { Heart, MessageCircle, UserPlus, Mail, Bird } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import TopBar from '@/components/TopBar'
 import Avatar from '@/components/Avatar'
 import { useNotifications } from '@/hooks/useNotifications'
@@ -10,16 +10,22 @@ import './NotificationsPage.css'
 
 export default function NotificationsPage() {
   const { notifications, loading, markAllRead, fetchNotifications } = useNotifications()
+  const didFetch = useRef(false)
+  const didMark = useRef(false)
 
   useEffect(() => {
+    if (didFetch.current) return
+    didFetch.current = true
     fetchNotifications()
   }, [fetchNotifications])
 
   useEffect(() => {
-    if (notifications.some((n) => !n.read)) {
+    if (loading || didMark.current) return
+    if (notifications.length > 0 && notifications.some((n) => !n.read)) {
+      didMark.current = true
       markAllRead()
     }
-  }, [notifications, markAllRead])
+  }, [notifications, loading, markAllRead])
 
   const iconFor = (type: string) => {
     switch (type) {

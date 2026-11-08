@@ -18,7 +18,7 @@ export function useNotifications() {
   const { user } = useAuth()
   const [unreadCount, setUnreadCount] = useState(0)
   const [notifications, setNotifications] = useState<NotificationItem[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const fetchUnreadCount = useCallback(async () => {
     if (!user) {
@@ -36,10 +36,14 @@ export function useNotifications() {
   }, [user])
 
   const fetchNotifications = useCallback(async () => {
-    if (!user) return
+    if (!user) {
+      setNotifications([])
+      setLoading(false)
+      return
+    }
 
     setLoading(true)
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('notifications')
       .select(`
         *,
@@ -48,6 +52,12 @@ export function useNotifications() {
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(40)
+
+    if (error) {
+      setNotifications([])
+      setLoading(false)
+      return
+    }
 
     setNotifications((data as NotificationItem[]) ?? [])
     setLoading(false)
@@ -74,7 +84,7 @@ export function useNotifications() {
     if (!user) return
 
     const channel = supabase
-      .channel('notifications')
+      .channel(`notifications-${user.id}`)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` },
