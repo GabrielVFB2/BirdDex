@@ -49,3 +49,17 @@ export interface PostWithDetails extends Post {
   liked_by_me?: boolean
   bookmarked_by_me?: boolean
 }
+
+export interface BirdAlternative {
+  common_name: string
+  scientific_name: string
+}
+
+export interface BirdIdentification {
+  bird_found: boolean
+  common_name: string
+  scientific_name: string
+  confidence: number
+  alternatives: BirdAlternative[]
+  notes: string
+}

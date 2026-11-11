@@ -7,8 +7,3 @@
 .auth-switch { text-align: center; font-size: var(--text-small); color: var(--color-text-muted); }
 .auth-switch a { color: var(--color-primary-text); font-weight: var(--font-weight-500); }
 .auth-switch a:hover { text-decoration: underline; }
-.auth-divider { display: flex; align-items: center; gap: var(--space-2); color: var(--color-text-muted); font-size: var(--text-small); margin: var(--space-1) 0; }
-.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
-.btn-google { width: 100%; min-height: var(--button-height); padding: var(--space-2) var(--button-padding-x); border-radius: var(--button-radius); font-size: var(--button-font-size); font-weight: var(--font-weight-500); display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border-strong); transition: all var(--transition); }
-.btn-google:hover { background: var(--color-surface-2); transform: translateY(-1px); box-shadow: var(--shadow-md); }
-.btn-google:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }

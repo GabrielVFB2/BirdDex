@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { Chrome as Home, Compass, Plus, MessageCircle, User } from 'lucide-react'
+import { Chrome as Home, Compass, ScanSearch, Plus, MessageCircle, User } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import './BottomNav.css'
 
@@ -15,6 +15,7 @@ export default function BottomNav() {
   const navItems = [
     { to: '/', label: 'Início', icon: Home, active: isActive('/') },
     { to: '/explore', label: 'Explorar', icon: Compass, active: isActive('/explore') },
+    { to: '/identify', label: 'Identificar', icon: ScanSearch, active: isActive('/identify') },
     { to: '/new', label: 'Registrar', icon: Plus, active: isActive('/new'), accent: true },
     { to: '/conversations', label: 'Conversas', icon: MessageCircle, active: isActive('/conversations') },
     { to: profile ? `/profile/${profile.id}` : '/signin', label: 'Perfil', icon: User, active: location.pathname.includes('/profile') },

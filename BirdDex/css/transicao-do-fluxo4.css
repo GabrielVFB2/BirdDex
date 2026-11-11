@@ -1,0 +1,21 @@
+body {
+	gap: 11px;
+	line-height: 1.4;
+	text-align: center;
+	padding: 24px 0;
+}
+
+.text-acao-de-transicao {
+	margin: 0 8px;
+}
+
+.seta-de-sequencia {
+	margin-right: -1px;
+	height: 17px;
+	max-width: none;
+	flex-shrink: 0;
+}
+
+.text-objetivo-da-acao {
+	margin: 0 8px;
+}

@@ -1,0 +1,7 @@
+.identify-page {
+  display: flex;
+  flex-direction: column;
+  /* altura da tela menos a barra de navegação (a mesma folga usada em .app-content) */
+  height: calc(100vh - 76px - env(safe-area-inset-bottom));
+  height: calc(100dvh - 76px - env(safe-area-inset-bottom));
+}

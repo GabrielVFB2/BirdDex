@@ -1,9 +1,11 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Bird, Camera, X } from 'lucide-react'
+import { Bird, Camera, ScanSearch, X } from 'lucide-react'
 import { usePostDraft } from '@/context/PostDraftContext'
 import { useAuth } from '@/context/AuthContext'
 import TopBar from '@/components/TopBar'
+import BirdScanner from '@/components/BirdScanner'
+import type { BirdIdentification } from '@/types'
 import './NewPostPage.css'
 
 const MAX_CAPTION = 500
@@ -14,6 +16,7 @@ export default function NewPostPage() {
   const { profile } = useAuth()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState('')
+  const [scannerOpen, setScannerOpen] = useState(false)
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -30,6 +33,16 @@ export default function NewPostPage() {
       setError('')
     }
     reader.readAsDataURL(file)
+  }
+
+  const handleScannerUse = (result: BirdIdentification, photoDataUrl: string) => {
+    updateDraft({
+      imageDataUrl: photoDataUrl || draft.imageDataUrl,
+      speciesName: result.common_name,
+      speciesScientific: result.scientific_name,
+    })
+    setError('')
+    setScannerOpen(false)
   }
 
   const handleRemovePhoto = () => {
@@ -104,6 +117,10 @@ export default function NewPostPage() {
               <span>Adicionar foto da ave</span>
             </button>
           )}
+          <button className="btn-secondary new-post-scan" onClick={() => setScannerOpen(true)}>
+            <ScanSearch size={18} />
+            Apontar a câmera e identificar a espécie
+          </button>
         </div>
 
         <div className="new-post-section">
@@ -156,6 +173,10 @@ export default function NewPostPage() {
           * Campos obrigatórios.
         </p>
       </div>
+
+      {scannerOpen && (
+        <BirdScanner onClose={() => setScannerOpen(false)} onUse={handleScannerUse} />
+      )}
 
       <div className="new-post-actions">
         <button className="btn-primary" onClick={handleReview}>

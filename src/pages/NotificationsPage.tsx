@@ -1,6 +1,6 @@
 import { Heart, MessageCircle, UserPlus, Mail, Bird } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import TopBar from '@/components/TopBar'
 import Avatar from '@/components/Avatar'
 import { useNotifications } from '@/hooks/useNotifications'
@@ -9,22 +9,24 @@ import { ptBR } from 'date-fns/locale'
 import './NotificationsPage.css'
 
 export default function NotificationsPage() {
-  const { notifications, loading, markAllRead, fetchNotifications } = useNotifications()
-  const didFetch = useRef(false)
-  const didMark = useRef(false)
+  const { notifications, loading, error, markAllRead, fetchNotifications } = useNotifications()
 
+  // Guarda quais notificações eram novas quando a página abriu, para continuarem
+  // destacadas mesmo depois de marcadas como lidas.
+  const [freshIds, setFreshIds] = useState<Set<string>>(() => new Set())
+
+  // Atualiza a lista ao abrir a página.
   useEffect(() => {
-    if (didFetch.current) return
-    didFetch.current = true
-    fetchNotifications()
+    void fetchNotifications()
   }, [fetchNotifications])
 
   useEffect(() => {
-    if (loading || didMark.current) return
-    if (notifications.length > 0 && notifications.some((n) => !n.read)) {
-      didMark.current = true
-      markAllRead()
-    }
+    if (loading) return
+    const unread = notifications.filter((n) => !n.read)
+    if (unread.length === 0) return
+
+    setFreshIds((prev) => new Set([...prev, ...unread.map((n) => n.id)]))
+    void markAllRead()
   }, [notifications, loading, markAllRead])
 
   const iconFor = (type: string) => {
@@ -59,15 +61,25 @@ export default function NotificationsPage() {
 
   return (
     <>
-      <TopBar title="Notificações" showBell={false} />
+      <TopBar title="Notificações" showBack showBell={false} />
       <div className="notifications-content">
         {loading ? (
           <div className="loading-container"><div className="spinner spinner-lg" /></div>
+        ) : error && notifications.length === 0 ? (
+          <div className="empty-state">
+            <h3 className="notifications-empty-title">Algo deu errado</h3>
+            <p className="notifications-empty-text">{error}</p>
+            <button className="btn-secondary" onClick={() => void fetchNotifications()}>
+              Tentar de novo
+            </button>
+          </div>
         ) : notifications.length === 0 ? (
           <div className="empty-state">
             <div className="empty-state-icon"><Bird size={48} strokeWidth={1.5} /></div>
             <h3 className="notifications-empty-title">Tudo em dia</h3>
-            <p className="notifications-empty-text">Você não tem novas notificações. Suas preferências foram carregadas.</p>
+            <p className="notifications-empty-text">
+              Quando alguém curtir, comentar, seguir ou enviar mensagem, o aviso aparece aqui.
+            </p>
           </div>
         ) : (
           <div className="notifications-list animate-fade-in">
@@ -82,9 +94,10 @@ export default function NotificationsPage() {
                     : notification.post_id
                       ? `/post/${notification.post_id}`
                       : `/profile/${notification.actor_id}`
+              const isFresh = !notification.read || freshIds.has(notification.id)
 
               return (
-                <Link key={notification.id} to={link} className={`notification-item ${notification.read ? '' : 'notification-unread'}`}>
+                <Link key={notification.id} to={link} className={`notification-item ${isFresh ? 'notification-unread' : ''}`}>
                   <div className={`notification-icon notification-icon-${notification.type}`}>
                     {iconFor(notification.type)}
                   </div>

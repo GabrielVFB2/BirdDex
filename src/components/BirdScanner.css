@@ -1,0 +1,212 @@
+.scanner {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.scanner-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  max-width: none;
+}
+
+.scanner-top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), transparent);
+}
+
+.scanner-close {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scanner-title {
+  flex: 1;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.scanner-auto {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 8px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.scanner-auto input {
+  accent-color: var(--color-primary-300);
+}
+
+.scanner-reticle {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: min(70vw, 320px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -60%);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.scanner-reticle-busy {
+  border-color: var(--color-primary-300);
+  animation: scanner-pulse 1s ease-in-out infinite;
+}
+
+@keyframes scanner-pulse {
+  50% { transform: translate(-50%, -60%) scale(1.03); }
+}
+
+.scanner-message {
+  position: relative;
+  z-index: 2;
+  margin: auto 24px;
+  padding: 24px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scanner-bottom {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+}
+
+.scanner-hint {
+  font-size: 14px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+}
+
+.scanner-hint-error {
+  background: rgba(176, 0, 32, 0.85);
+}
+
+.scanner-shutter {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--color-primary-text);
+  border: 5px solid rgba(255, 255, 255, 0.5);
+  background-clip: padding-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scanner-shutter:disabled {
+  opacity: 0.7;
+}
+
+.scanner-shutter .spinner {
+  width: 28px;
+  height: 28px;
+}
+
+.scanner-result {
+  width: 100%;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius-lg);
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow-lg);
+}
+
+.scanner-result-name {
+  font-size: 24px;
+  color: var(--color-primary-text);
+}
+
+.scanner-result-scientific {
+  font-style: italic;
+  color: var(--color-text-muted);
+  font-size: 15px;
+}
+
+.scanner-confidence {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.scanner-confidence-bar {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-alt);
+  overflow: hidden;
+}
+
+.scanner-confidence-bar > div {
+  height: 100%;
+  background: var(--color-primary-300);
+}
+
+.scanner-result-notes {
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.scanner-disclaimer {
+  font-size: 12px;
+  color: var(--color-text-light);
+}
+
+.scanner-result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* Modo página: ocupa a área entre o topo e a barra de navegação */
+.scanner-page {
+  position: relative;
+  inset: auto;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}

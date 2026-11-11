@@ -1,0 +1,70 @@
+body {
+	line-height: normal;
+}
+
+.cabecalho1 {
+	align-items: flex-start;
+}
+
+.cabecalho1 .cabecalho-bell {
+	margin-top: 3px;
+}
+
+.tela-do-aplicativo-conteudo {
+	margin: 0 -1px;
+	gap: 16px;
+	font-weight: 400;
+	padding-bottom: 33px;
+}
+
+.publicacao1 .card-imagem-de-ave-reservada1 {
+	padding-top: 49px;
+	padding-bottom: 49px;
+}
+
+.tela-do-aplicativo-publicacao {
+	width: 100%;
+	max-width: 540px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	text-align: left;
+}
+
+.tela-do-aplicativo-autoria {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	align-self: start;
+}
+
+.tela-do-aplicativo-btn-avatar {
+	font-weight: 400;
+}
+
+.tela-do-aplicativo-identificacao {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 3px;
+	text-align: left;
+}
+
+.tela-do-aplicativo-text-nome {
+	color: #000;
+}
+
+.tela-do-aplicativo-text-local {
+	color: #686868;
+	font-size: 10px;
+}
+
+.card-imagem-de-ave-reservada2 {
+	margin-top: 11px;
+	padding-top: 36px;
+	padding-bottom: 36px;
+}
+
+.tela-do-aplicativo-text-da {
+	line-height: 1.45;
+}
