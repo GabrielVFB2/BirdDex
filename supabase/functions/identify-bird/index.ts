@@ -1,8 +1,3 @@
-// Edge Function: identifica a espécie de uma ave a partir de uma foto.
-// A chave da API fica só aqui no servidor (secret), nunca no app.
-//
-//   supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
-//   supabase functions deploy identify-bird
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
 const CORS_HEADERS = {
@@ -11,8 +6,8 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
-const MODEL = Deno.env.get('ANTHROPIC_MODEL') ?? 'claude-sonnet-5-5'
-const MAX_BASE64_LENGTH = 7_000_000 // ~5 MB de imagem
+const MODEL = Deno.env.get('GEMINI_MODEL') ?? 'gemini-3.6-flash'
+const MAX_BASE64_LENGTH = 7_000_000
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 const PROMPT = `Você é um ornitólogo especialista em aves, com foco na avifauna do Brasil.
@@ -57,17 +52,24 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS_HEADERS })
   if (req.method !== 'POST') return json({ error: 'Método não permitido.' }, 405)
 
-  // Só usuários logados no app podem usar (evita gasto de terceiros com a sua chave).
   const authHeader = req.headers.get('Authorization')
   if (!authHeader) return json({ error: 'Faça login para identificar aves.' }, 401)
 
-  const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, {
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')
+  const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+     return json({ error: 'Configuração do Supabase ausente.' }, 500)
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     global: { headers: { Authorization: authHeader } },
   })
+  
   const { data: userData, error: userError } = await supabase.auth.getUser()
   if (userError || !userData.user) return json({ error: 'Sessão inválida.' }, 401)
 
-  const apiKey = Deno.env.get('ANTHROPIC_API_KEY')
+  const apiKey = Deno.env.get('GEMINI_API_KEY')
   if (!apiKey) return json({ error: 'Identificação indisponível: chave da API não configurada.' }, 500)
 
   let image = ''
@@ -84,38 +86,40 @@ Deno.serve(async (req) => {
   if (!ALLOWED_TYPES.includes(mediaType)) return json({ error: 'Formato de imagem não suportado.' }, 400)
 
   try {
-    const apiRes = await fetch('https://api.anthropic.com/v1/messages', {
+    const apiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 600,
-        messages: [
+        contents: [
           {
             role: 'user',
-            content: [
-              { type: 'image', source: { type: 'base64', media_type: mediaType, data: image } },
-              { type: 'text', text: PROMPT },
+            parts: [
+              { text: PROMPT },
+              {
+                inlineData: {
+                  mimeType: mediaType,
+                  data: image,
+                },
+              },
             ],
           },
         ],
+        generationConfig: {
+          maxOutputTokens: 600,
+          responseMimeType: 'application/json',
+        },
       }),
     })
 
     if (!apiRes.ok) {
-      console.error('Anthropic API error', apiRes.status, await apiRes.text())
+      console.error('Gemini API error', apiRes.status, await apiRes.text())
       return json({ error: 'O serviço de identificação falhou. Tente novamente.' }, 502)
     }
 
     const payload = await apiRes.json()
-    const text = (payload.content ?? [])
-      .filter((b: { type: string }) => b.type === 'text')
-      .map((b: { text: string }) => b.text)
-      .join('')
+    const text = payload.candidates?.[0]?.content?.parts?.[0]?.text || ''
 
     const raw = extractJson(text) as Record<string, unknown>
     const found = raw.bird_found === true
