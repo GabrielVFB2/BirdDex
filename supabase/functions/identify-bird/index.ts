@@ -12,6 +12,7 @@ const CORS_HEADERS = {
 
 const MODEL = Deno.env.get('GEMINI_MODEL') || 'gemini-3.8-flash'
 const MAX_BASE64_LENGTH = 7_000_000 // ~5 MB de imagem
+const GEMINI_TIMEOUT_MS = 45_000
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 const PROMPT = `Você é um ornitólogo especialista em aves, com foco na avifauna do Brasil.
@@ -52,6 +53,10 @@ function str(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
 }
 
+function isAbortError(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'name' in error && error.name === 'AbortError'
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS_HEADERS })
   if (req.method !== 'POST') return json({ error: 'Método não permitido.' }, 405)
@@ -82,6 +87,8 @@ Deno.serve(async (req) => {
   if (!image || image.length > MAX_BASE64_LENGTH) return json({ error: 'Imagem ausente ou grande demais.' }, 400)
   if (!ALLOWED_TYPES.includes(mediaType)) return json({ error: 'Formato de imagem não suportado.' }, 400)
 
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS)
   try {
     const apiRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`,
@@ -108,6 +115,7 @@ Deno.serve(async (req) => {
             maxOutputTokens: 2048,
           },
         }),
+        signal: controller.signal,
       },
     )
 
@@ -147,7 +155,12 @@ Deno.serve(async (req) => {
       notes: str(raw.notes),
     })
   } catch (err) {
+    if (isAbortError(err)) {
+      return json({ error: 'A identificação demorou demais. Tente novamente.' }, 504)
+    }
     console.error('identify-bird failure', err)
     return json({ error: 'Não foi possível interpretar a identificação. Tente outra foto.' }, 502)
+  } finally {
+    clearTimeout(timeoutId)
   }
 })
