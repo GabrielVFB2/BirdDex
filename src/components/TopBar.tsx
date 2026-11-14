@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { Bell, Bird } from 'lucide-react'
+import { Bell, Bird, MessageCircle } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useNotifications } from '@/hooks/useNotifications'
 import Avatar from './Avatar'
@@ -10,9 +10,11 @@ interface TopBarProps {
   showLogo?: boolean
   showBack?: boolean
   showBell?: boolean
+  /** Atalho para as conversas. Por padrão aparece junto com o sino. */
+  showMessages?: boolean
 }
 
-export default function TopBar({ title, showLogo = false, showBack = false, showBell = true }: TopBarProps) {
+export function TopBar({ title, showLogo = false, showBack = false, showBell = true, showMessages = showBell }: TopBarProps) {
   const navigate = useNavigate()
   const { profile } = useAuth()
   const { unreadCount } = useNotifications()
@@ -33,6 +35,11 @@ export default function TopBar({ title, showLogo = false, showBack = false, show
         </>
       )}
       <div className="topbar-actions">
+        {showMessages && (
+          <Link to="/conversations" className="btn-icon topbar-bell" aria-label="Conversas">
+            <MessageCircle size={18} strokeWidth={1.7} />
+          </Link>
+        )}
         {showBell && (
           <Link to="/notifications" className="btn-icon topbar-bell" aria-label="Notificações">
             <Bell size={18} strokeWidth={1.7} />
@@ -48,3 +55,4 @@ export default function TopBar({ title, showLogo = false, showBack = false, show
     </header>
   )
 }
+export default TopBar;

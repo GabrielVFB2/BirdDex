@@ -9,7 +9,7 @@ import '@/styles/global.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
+    <BrowserRouter>
       <AuthProvider>
         <NotificationsProvider>
           <PostDraftProvider>

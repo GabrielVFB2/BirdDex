@@ -1,0 +1,16 @@
+.rarity-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-500);
+  line-height: var(--line-height-heading);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.rarity-comum { background: var(--color-surface-3); color: var(--color-primary-text); border-color: var(--color-surface-4); }
+.rarity-incomum { background: var(--color-success-100); color: var(--color-success-700); border-color: var(--color-success-200); }
+.rarity-raro { background: var(--color-primary-200); color: var(--color-primary-800); border-color: var(--color-primary-300); }
+.rarity-lendario { background: #fff3cd; color: #5c3f00; border-color: #e0b84c; }

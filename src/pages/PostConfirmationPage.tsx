@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Check, Bird } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import TopBar from '@/components/TopBar'
+import CaptureCelebration from '@/components/CaptureCelebration'
+import type { CaptureResult } from '@/types'
 import './PostConfirmationPage.css'
 
 interface PublishedPost {
@@ -16,7 +19,10 @@ export default function PostConfirmationPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { profile } = useAuth()
-  const publishedPost = (location.state as { publishedPost?: PublishedPost } | null)?.publishedPost
+  const state = location.state as { publishedPost?: PublishedPost; capture?: CaptureResult | null } | null
+  const publishedPost = state?.publishedPost
+  const capture = state?.capture
+  const [celebrationOpen, setCelebrationOpen] = useState(true)
 
   if (!publishedPost) {
     navigate('/')
@@ -66,6 +72,14 @@ export default function PostConfirmationPage() {
           </p>
         </div>
       </div>
+
+      {capture?.status === 'captured' && celebrationOpen && (
+        <CaptureCelebration
+          result={capture}
+          photoUrl={publishedPost.imageUrl}
+          onClose={() => setCelebrationOpen(false)}
+        />
+      )}
 
       <div className="confirmation-actions">
         <Link to={`/post/${publishedPost.id}`} className="btn-primary">

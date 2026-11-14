@@ -3,8 +3,6 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 export default defineConfig({
-  // No GitHub Pages o site fica em /nome-do-repositorio/; o workflow define VITE_BASE. Localmente fica '/'.
-  base: process.env.VITE_BASE || '/',
   plugins: [react()],
   resolve: {
     alias: {

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Bird, Heart, MessageCircle, MapPin, Settings, Send, LogOut } from 'lucide-react'
+import { Bird, BookMarked, Heart, MessageCircle, MapPin, Settings, Send, LogOut } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 import TopBar from '@/components/TopBar'
@@ -25,6 +25,7 @@ export default function ProfilePage() {
   const [followerCount, setFollowerCount] = useState(0)
   const [followingCount, setFollowingCount] = useState(0)
   const [editOpen, setEditOpen] = useState(false)
+  const [dex, setDex] = useState<{ captured: number; total: number; achievements: number } | null>(null)
 
   const isOwnProfile = user?.id === id
 
@@ -57,6 +58,18 @@ export default function ProfilePage() {
 
     setFollowerCount(followers ?? 0)
     setFollowingCount(following ?? 0)
+
+    // Progresso da BirdDex (se as tabelas ainda não existirem, o cartão simplesmente não aparece).
+    const [capturedRes, totalRes, achievementsRes] = await Promise.all([
+      supabase.from('user_captures').select('*', { count: 'exact', head: true }).eq('user_id', id),
+      supabase.from('bird_species').select('*', { count: 'exact', head: true }),
+      supabase.from('user_achievements').select('*', { count: 'exact', head: true }).eq('user_id', id),
+    ])
+    setDex({
+      captured: capturedRes.count ?? 0,
+      total: totalRes.count ?? 0,
+      achievements: achievementsRes.count ?? 0,
+    })
 
     if (user && !isOwnProfile) {
       const { data: followData } = await supabase
@@ -205,6 +218,20 @@ export default function ProfilePage() {
             <span className="profile-stat-label">seguindo</span>
           </div>
         </div>
+
+        {dex && dex.total > 0 && (
+          <Link to={`/colecao/${profile.id}`} className="profile-dex-card">
+            <BookMarked size={20} />
+            <span className="profile-dex-text">
+              <strong>BirdDex</strong>
+              <span>
+                {dex.captured} de {dex.total} espécies · {dex.achievements}{' '}
+                {dex.achievements === 1 ? 'conquista' : 'conquistas'}
+              </span>
+            </span>
+            <span aria-hidden="true">›</span>
+          </Link>
+        )}
 
         {isOwnProfile ? (
           <div className="profile-actions">

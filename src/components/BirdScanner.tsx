@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { X, Camera, RefreshCw, Check } from 'lucide-react'
+import { X, Camera, RefreshCw, Check, Sparkles } from 'lucide-react'
 import { identifyBird } from '@/lib/identifyBird'
 import type { BirdIdentification } from '@/types'
 import './BirdScanner.css'
@@ -12,6 +12,8 @@ interface BirdScannerProps {
   variant?: 'overlay' | 'page'
   /** Texto do botão que confirma o resultado. */
   useLabel?: string
+  /** Quando informado, mostra o botão "Capturar" (adiciona a ave à coleção). Deve lançar Error para exibir a falha. */
+  onCapture?: (result: BirdIdentification, photoDataUrl: string) => Promise<void>
 }
 
 const MAX_FRAME_SIDE = 1024
@@ -24,7 +26,7 @@ function confidenceLabel(c: number) {
   return 'baixa'
 }
 
-export default function BirdScanner({ onClose, onUse, variant = 'overlay', useLabel = 'Usar no registro' }: BirdScannerProps) {
+export default function BirdScanner({ onClose, onUse, variant = 'overlay', useLabel = 'Usar no registro', onCapture }: BirdScannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const autoAttemptsRef = useRef(0)
@@ -36,6 +38,8 @@ export default function BirdScanner({ onClose, onUse, variant = 'overlay', useLa
   const [error, setError] = useState('')
   const [result, setResult] = useState<BirdIdentification | null>(null)
   const [photo, setPhoto] = useState('')
+  const [capturing, setCapturing] = useState(false)
+  const [captureError, setCaptureError] = useState('')
 
   // Abre a câmera traseira e libera quando o componente sai da tela.
   useEffect(() => {
@@ -132,10 +136,24 @@ export default function BirdScanner({ onClose, onUse, variant = 'overlay', useLa
     setAuto((a) => !a)
   }
 
+  const handleCapture = async () => {
+    if (!result || !onCapture) return
+    setCapturing(true)
+    setCaptureError('')
+    try {
+      await onCapture(result, photo)
+    } catch (e) {
+      setCaptureError(e instanceof Error ? e.message : 'Não foi possível capturar.')
+    } finally {
+      setCapturing(false)
+    }
+  }
+
   const retry = () => {
     setResult(null)
     setPhoto('')
     setError('')
+    setCaptureError('')
     autoAttemptsRef.current = 0
   }
 
@@ -190,11 +208,21 @@ export default function BirdScanner({ onClose, onUse, variant = 'overlay', useLa
               )}
               {result.notes && <p className="scanner-result-notes">{result.notes}</p>}
               <p className="scanner-disclaimer">Identificação feita por IA — confirme antes de publicar.</p>
+              {captureError && <p className="scanner-hint scanner-hint-error">{captureError}</p>}
               <div className="scanner-result-actions">
-                <button className="btn-primary" onClick={() => onUse(result, photo)}>
+                {onCapture && (
+                  <button className="btn-primary" onClick={() => void handleCapture()} disabled={capturing}>
+                    <Sparkles size={18} /> {capturing ? 'Capturando…' : 'Capturar'}
+                  </button>
+                )}
+                <button
+                  className={onCapture ? 'btn-secondary' : 'btn-primary'}
+                  onClick={() => onUse(result, photo)}
+                  disabled={capturing}
+                >
                   <Check size={18} /> {useLabel}
                 </button>
-                <button className="btn-secondary" onClick={retry}>
+                <button className="btn-secondary" onClick={retry} disabled={capturing}>
                   <RefreshCw size={16} /> Tentar de novo
                 </button>
               </div>

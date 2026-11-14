@@ -139,7 +139,7 @@ export default function ConversationsPage() {
 
   return (
     <>
-      <TopBar title="Conversas" showBell />
+      <TopBar title="Conversas" showBell showMessages={false} />
       <div className="conversations-content">
         {error && <div className="error-msg">{error}</div>}
 

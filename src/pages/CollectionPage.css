@@ -1,0 +1,434 @@
+.collection-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3) var(--space-5);
+}
+
+.collection-empty-text {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+  padding: var(--space-3) 0;
+}
+
+/* ---- Resumo ---- */
+.dex-summary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dex-summary-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.dex-summary-count {
+  font-family: var(--font-heading);
+  font-size: var(--text-h1);
+  font-weight: var(--font-weight-500);
+  color: var(--color-primary-text);
+  line-height: var(--line-height-heading);
+}
+
+.dex-summary-total {
+  font-size: var(--text-h3);
+  color: var(--color-text-muted);
+}
+
+.dex-summary-percent {
+  font-family: var(--font-mono);
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-500);
+}
+
+.dex-summary-label,
+.dex-summary-sub {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.dex-progress {
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-3);
+  overflow: hidden;
+}
+
+.dex-progress > div {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  transition: width var(--duration-base) var(--easing);
+}
+
+.dex-progress-sm {
+  height: 6px;
+  flex: 1;
+}
+
+/* ---- Abas ---- */
+.dex-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background: var(--color-surface-3);
+  border-radius: var(--radius-control);
+}
+
+.dex-tab {
+  min-height: var(--target-min);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-500);
+  font-size: var(--text-small);
+  color: var(--color-primary-text);
+}
+
+.dex-tab-active {
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+/* ---- Busca e filtros ---- */
+.dex-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-2);
+  border: 1px dashed var(--color-border-strong);
+  color: var(--color-primary-text);
+}
+
+.dex-hint p {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+.dex-hint-btn {
+  width: auto;
+}
+
+.dex-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding: 0 var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  color: var(--color-text-muted);
+}
+
+.dex-search:focus-within {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.dex-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  color: var(--color-text);
+}
+
+.dex-filters {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.dex-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.dex-chip {
+  flex-shrink: 0;
+  min-height: 34px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--text-small);
+}
+
+.dex-chip-active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: var(--font-weight-500);
+}
+
+/* ---- Grade de espécies ---- */
+.dex-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.dex-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top-width: 4px;
+  border-radius: var(--radius-md);
+  text-align: left;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.dex-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.dex-rarity-comum { border-top-color: var(--color-surface-4); }
+.dex-rarity-incomum { border-top-color: var(--color-success-400); }
+.dex-rarity-raro { border-top-color: var(--color-primary-500); }
+.dex-rarity-lendario { border-top-color: #d9a520; }
+
+.dex-card-number {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+.dex-card-image {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  color: var(--color-primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.dex-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dex-card-locked .dex-card-image {
+  background: var(--color-primary-800);
+  color: var(--color-primary-300);
+}
+
+.dex-card-name {
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-500);
+  line-height: var(--line-height-heading);
+  color: var(--color-text);
+  min-height: 2.4em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.dex-card-locked .dex-card-name {
+  color: var(--color-text-muted);
+}
+
+/* ---- Conquistas ---- */
+.achievement-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.achievement {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.achievement-locked {
+  background: var(--color-surface-2);
+}
+
+.achievement-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-4);
+  color: var(--color-primary-text);
+}
+
+.achievement-unlocked.tier-bronze .achievement-icon { background: #f3dfcf; color: #5a3416; }
+.achievement-unlocked.tier-prata .achievement-icon { background: #dfe5ea; color: #33404c; }
+.achievement-unlocked.tier-ouro .achievement-icon { background: #fff3cd; color: #5c3f00; }
+
+.achievement-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.achievement-title {
+  font-size: var(--text-body);
+  color: var(--color-text);
+}
+
+.achievement-locked .achievement-title {
+  color: var(--color-text-muted);
+}
+
+.achievement-desc {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.achievement-date {
+  color: var(--color-success-700);
+  font-size: var(--text-small);
+  margin-top: 2px;
+}
+
+.achievement-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+}
+
+/* ---- Detalhe da espécie ---- */
+.dex-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(2, 3, 5, 0.6);
+}
+
+.dex-sheet {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-3) calc(var(--space-4) + env(safe-area-inset-bottom));
+  background: var(--color-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  text-align: center;
+}
+
+.dex-sheet-close {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+}
+
+.dex-sheet-image {
+  width: 200px;
+  height: 200px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-2);
+  color: var(--color-primary-text);
+  border: 2px solid var(--color-primary);
+}
+
+.dex-sheet-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dex-sheet-image-locked {
+  background: var(--color-primary-800);
+  color: var(--color-primary-300);
+  border-color: var(--color-primary-700);
+}
+
+.dex-sheet-number {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+.dex-sheet-name {
+  font-size: var(--text-h2);
+  color: var(--color-primary-text);
+  line-height: var(--line-height-heading);
+}
+
+.dex-sheet-scientific {
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.dex-sheet-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+.dex-sheet-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.dex-sheet-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dex-sheet-cta {
+  width: auto;
+  margin-top: var(--space-1);
+}

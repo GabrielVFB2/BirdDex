@@ -6,6 +6,8 @@ import { useAuth } from '@/context/AuthContext'
 import { usePostDraft } from '@/context/PostDraftContext'
 import TopBar from '@/components/TopBar'
 import Avatar from '@/components/Avatar'
+import { captureBird } from '@/lib/collection'
+import type { CaptureResult } from '@/types'
 import './ReviewPostPage.css'
 
 export default function ReviewPostPage() {
@@ -65,6 +67,22 @@ export default function ReviewPostPage() {
       return
     }
 
+    // Publicar uma ave com a espécie preenchida também a captura para a BirdDex.
+    // É um bônus: se falhar, a publicação continua valendo.
+    let capture: CaptureResult | null = null
+    if (draft.speciesName.trim() || draft.speciesScientific.trim()) {
+      try {
+        capture = await captureBird({
+          scientificName: draft.speciesScientific.trim(),
+          commonName: draft.speciesName.trim(),
+          photoUrl: imageUrl,
+          location: draft.location.trim(),
+        })
+      } catch {
+        capture = null
+      }
+    }
+
     const publishedPost = {
       id: postData.id,
       caption: draft.caption,
@@ -74,7 +92,7 @@ export default function ReviewPostPage() {
     }
 
     resetDraft()
-    navigate('/new/confirmation', { state: { publishedPost } })
+    navigate('/new/confirmation', { state: { publishedPost, capture } })
   }
 
   const handleEdit = () => {
